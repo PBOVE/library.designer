@@ -279,8 +279,9 @@ module.exports = {
       }
     ],
     '@typescript-eslint/no-explicit-any': 'off',
-
-    'import/no-extraneous-dependencies': 'off'
+    'import/no-extraneous-dependencies': 'off',
+    'import/first': 'off',
+    'no-bitwise': 'off'
   },
   overrides: [
     {

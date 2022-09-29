@@ -1,5 +1,5 @@
 <template>
-  <a-select :placeholder="placeholder">
+  <a-select :placeholder="placeholder" allow-clear>
     <template #suffixIcon>
       <icon type="ep:arrow-down" />
     </template>

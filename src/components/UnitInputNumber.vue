@@ -10,7 +10,7 @@
       <a-tooltip v-model:visible="visible" :overlay-class-name="$style.overlay" placement="bottomRight">
         <div :class="$style.suffix">{{ selectUnit || '-' }}</div>
 
-        <template #title>
+        <template v-if="options.length > 1" #title>
           <div
             v-for="(item, index) in options"
             :key="index"
@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
   options: () => [
     { label: 'px', value: 'px' },
     { label: '%', value: '%' },
-    { label: 'auto', value: '' }
+    { label: 'auto', value: '-' }
   ]
 });
 
@@ -77,8 +77,6 @@ const onInputChange = () => {
   const value = inputValue.value || props.defaultValue;
 
   const unit = Number(value) ? selectUnit.value : '';
-
-  console.log(value);
 
   emit('update:value', value ? `${value}${unit}` : '');
 
@@ -154,7 +152,9 @@ watch(
 }
 
 .dropdown-item {
-  padding: 3px 11px;
+  height: 25px;
+  padding: 0 11px;
+  line-height: 25px;
   color: #333;
   cursor: pointer;
 

@@ -63,7 +63,7 @@ export interface Contenxt {
   };
   // 选中的模型
   selectSchema: {
-    set: (record: Schema) => void
+    set: (record: Schema | null) => void
 
     get: () => Schema | null
 

@@ -1,52 +1,119 @@
 <template>
-  <div :class="$style['wrap']">
-    <div class="flex-y-center h-44 pt-7 pb-4 cursor-pointer">
-      <div :class="[$style['label'], 'flex-y-center']" :style="{ width: labelWidth }" @click="visible = !visible">
-        <icon
-          v-if="$slots.overlay"
-          type="ant-design:caret-right-filled"
-          :rotate="visible ? 90 : 0"
-          :class="$style['icon']"
-        />
-        <div :class="isValue && $style['field-title']">
+  <div :visible="visible" :divider="divider" :class="$style['wrap']">
+    <div :class="$style['container']" :type="type">
+      <div
+        :class="[$style['label'], labelClass, overlay && 'cursor-pointer']"
+        :style="{ width }"
+        @click="handleOpenCollapse"
+      >
+        <icon v-if="overlay" type="ant-design:caret-right-filled" :rotate="visible ? 90 : 0" :class="$style['icon']" />
+        <div :class="[isTitleAction && $style['field-title'], $style['label-title']]">
           <slot name="label">{{ label }}</slot>
         </div>
       </div>
-      <div class="flex-1 w-0">
+
+      <div :class="$style['main']">
         <slot></slot>
       </div>
     </div>
 
-    <div v-if="$slots.overlay" v-show="visible" :class="$style['overlay']">
-      <slot name="overlay"></slot>
-    </div>
+    <b-collapse-transition>
+      <div v-if="overlay" v-show="visible" :class="[$style['overlay'], overlayClass]">
+        <slot name="overlay"></slot>
+      </div>
+    </b-collapse-transition>
   </div>
 </template>
 
 <script lang="ts" setup>
-defineProps({
-  label: {
-    type: String,
-    default: ''
-  },
-  labelWidth: {
-    type: String,
-    default: '80px'
-  },
-  isValue: {
-    type: Boolean,
-    default: false
-  }
+import { isArray, isEmpty, isObject } from 'lodash-es';
+
+interface Props {
+  // label 标签的文本
+  label?: string;
+  // label 标签的样式
+  labelClass?: string;
+  // label 标签的宽度
+  labelWidth?: string;
+  // 是否为 有效数据
+  isValue?: boolean | string | Array<unknown> | { [key: string]: unknown };
+  // 弹出层样式
+  overlayClass?: string;
+  // 分割线
+  divider?: boolean;
+  // 展示类型
+  type?: 'horizontal' | 'vertical';
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  label: '',
+  labelClass: '',
+  overlayClass: '',
+  labelWidth: '80px',
+  isValue: () => false,
+  divider: true,
+  type: 'horizontal'
 });
 
+const width = computed(() => (props.type === 'horizontal' ? props.labelWidth : ''));
+
 const visible = ref<boolean>(false);
+
+const isTitleAction = computed(() => {
+  // 数组判断每一个 key
+  if (isArray(props.isValue)) {
+    return props.isValue.some((el) => !isEmpty(el));
+  }
+  // 数组判断每一个 value
+  if (isObject(props.isValue)) {
+    return Object.values(props.isValue).some((el) => !isEmpty(el));
+  }
+  // 判断是否空
+  return !isEmpty(props.isValue);
+});
+
+const overlay = computed(() => !!useSlots().overlay);
+
+function handleOpenCollapse() {
+  if (overlay.value) {
+    visible.value = true;
+  }
+  //
+}
 </script>
 
 <style lang="less" module>
 .wrap {
   margin: 0 20px;
-  border-bottom: 1px solid #f0f0f0;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--text-color);
+
+  &[visible='true'] {
+    border-color: transparent;
+  }
+
+  &[divider='true'] + .wrap[divider='true'] {
+    border-top: 1px solid #f0f0f0;
+  }
+}
+
+.container {
+  min-height: 44px;
+  padding: 7px 0 4px;
+
+  &[type='horizontal'] {
+    display: flex;
+    align-items: center;
+
+    .main {
+      flex: 1;
+      width: 0;
+    }
+  }
+
+  &[type='vertical'] {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .icon {
@@ -56,8 +123,17 @@ const visible = ref<boolean>(false);
 
 .label {
   flex-shrink: 0;
+  height: 100%;
   font-size: 12px;
   user-select: none;
+
+  .flex-y-center();
+}
+
+.label-title {
+  height: 32px;
+
+  .flex-center();
 }
 
 .overlay {
@@ -72,6 +148,6 @@ const visible = ref<boolean>(false);
 }
 
 .field-title {
-  color: #006cff;
+  color: @primary-color;
 }
 </style>

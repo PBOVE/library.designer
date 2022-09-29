@@ -3,7 +3,7 @@ import App from './App.vue';
 import { setupRouter } from './router';
 import PluginsIniter from './plugins/plugins-initer';
 import 'virtual:windi.css';
-import '@/assets/css/global.less';
+import '@/assets/css/index.less';
 import '@/assets/css/ant.variable.less';
 
 const app = createApp(App);

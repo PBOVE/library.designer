@@ -1,9 +1,9 @@
 <template>
-  <page-designer v-model:page="page" class="h-screen w-screen" :template-tree="templateTree">
+  <page-compile v-model:page="page" class="h-screen w-screen" :template-tree="templateTree">
     <template #title> 海阅编辑器 </template>
 
     <template #view="record"> {{ record }}</template>
-  </page-designer>
+  </page-compile>
 </template>
 
 <script lang="ts" setup>
@@ -22,17 +22,13 @@ const templateTree: TemplateTree[] = [
 Object.entries(globalSchemaSource).forEach(([key, module]) => {
   const match = key.match(/^.+\/material\/(.*)\/(.*)\/schema.ts$/i);
 
-  if (!match || !module.template) {
-    return;
-  }
+  if (!match || !module.template) return;
 
   const [, level, name] = match;
 
   const index = templateTree.findIndex((el) => el.level === level);
 
-  if (index === -1) {
-    return;
-  }
+  if (index === -1) return;
 
   templateTree[index].children.push({ ...module.template, name });
 });
