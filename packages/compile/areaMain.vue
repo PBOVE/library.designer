@@ -53,7 +53,13 @@
 
     <div class="bc-main-area">
       <div :class="['bc-simulator-canvas', `bc-simulator-${layoutType}`]">
-        <drop-container v-model:list="widgetTree" class="bc-compile" item-key="id" @select="selectSchema.set">
+        <drop-container
+          v-model:list="widgetTree"
+          class="bc-compile"
+          item-key="id"
+          @select="handleSeleteTemplate"
+          @delete="handleDeleteTemplate"
+        >
           <template #default="record">
             <slot v-bind="record"></slot>
           </template>
@@ -105,7 +111,17 @@ function handleClickKeyboard() {
   visible.keyboard = true;
 }
 
+function handleSeleteTemplate(record: Schema) {
+  selectSchema.set(record);
+}
+
 function handleClickPageSetting() {
+  selectSchema.set(null);
+}
+
+function handleDeleteTemplate(index: number) {
+  widgetTree.value.splice(index, 1);
+
   selectSchema.set(null);
 }
 </script>
@@ -201,7 +217,7 @@ function handleClickPageSetting() {
   cursor: pointer;
 
   &.is-actived {
-    color: var(--text-color);
+    color: @primary-color;
   }
 }
 </style>

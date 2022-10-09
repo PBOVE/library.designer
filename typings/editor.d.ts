@@ -1,77 +1,151 @@
+import type { CSSProperties, Component } from 'vue';
 
-import type { CSSProperties } from 'vue'
+type Props = Indexable;
+
+// HTTP 类型
+type Method = 'get' | 'post' | 'put' | 'patch' | 'delete';
+
+// 变量类型
+type VariableType = 'string' | 'number' | 'boolean'
 
 
-type Props = Indexable
+//  参数
+export interface Params {
+  key: string;
 
- // 组件数据
-export interface Schema {
-  // 组件名称
-  label: string
+  value: string;
 
-  // 组件类型
-  name: string
+  type: VariableType | undefined;
 
-  // 组件唯一值
   id: string
-
-  // 配置信息
-  props: Props
-
-  // 不同状态样式
-  __style__: Recordable<CSSProperties>
-
-  // 子数据
-  children?: Schema[]
 }
 
- // 模版名称
-export interface Template {
-  // 名称
-  label: string
+// 组件数据
+export interface Schema {
+  // 组件名称
+  label: string;
 
   // 组件类型
-  name?: string
+  name: string;
+
+  // 组件唯一值
+  id: string;
+
+  // 配置信息
+  props: Props;
+
+  // 不同状态样式
+  __style__: Recordable<CSSProperties>;
+
+  // 子数据
+  children?: Schema[];
+}
+
+// 模版名称
+export interface Template {
+  // 名称
+  label: string;
+
+  // 组件类型
+  name?: string;
 
   // 图标
-  icon: string
+  icon: string;
 }
 
 // 模版树
 export interface TemplateTree {
-  label: string
+  label: string;
 
-  level: string
+  level: string;
 
-  children: Required<Template>[]
+  children: Required<Template>[];
 }
-
 
 // 页面数据
 export interface Page {
-  widgetTree: Schema[]
+  widgetTree: Schema[];
 }
 
+export interface DataSource {
+  // 唯一值
+  id: string;
+  // 名称
+  name: string;
+  // 描述
+  description: string;
+  // 类型
+  protocal: 'url' | 'remote' | 'value';
+  // 类型为 远程 api
+  options?: {
+    // 请求方式
+    method: Method;
+    // 请求地址
+    url: string;
+    // 请求参数
+    params: Params[];
+    // 响应映射
+    response: {
+      // 状态码
+      status: string;
+      // 数据源
+      data: string;
+      // 接口处理信息
+      message: string;
+    };
+    // 验证数据是否有效
+    validate: {
+      // 状态码
+      status: {
+        value: string;
+
+        type: VariableType;
+      };
+      // 成功提示
+      success: string;
+      // 错误提示
+      error: string;
+    };
+  };
+  // 类型为 变量
+  initialData: {
+    type: VariableType;
+
+    key: string;
+
+    value: string;
+  };
+}
 
 export interface Contenxt {
   // 模版树
   templateTree: TemplateTree[];
   // 页面配置数据
   onInstance: {
-    get: (key: keyof Page) => Page[keyof Page]
-    set: (key: keyof Page, value: Page[keyof Page]) => void
+    get: (key: keyof Page) => Page[keyof Page];
+    set: (key: keyof Page, value: Page[keyof Page]) => void;
   };
   // 选中的模型
   selectSchema: {
-    set: (record: Schema | null) => void
+    set: (record: Schema | null) => void;
 
-    get: () => Schema | null
+    get: () => Schema | null;
 
-    update: (key: string, value: Schema[keyof Schema]) => void
+    update: (key: string, value: Schema[keyof Schema]) => void;
   };
 }
 
+export interface Module {
+  // 模版树
+  template: Template;
+}
 
+export interface Setter {
+  [key: string]: {
+    [key: string]: unknown
+  }
+}
 
-
-
+export interface AutoComponent {
+  default: Component
+}

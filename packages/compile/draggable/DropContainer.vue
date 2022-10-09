@@ -16,9 +16,9 @@
       <div v-if="selectSchemaId === item.id" class="bc-borders-actions">
         <div class="bc-borders-action">{{ item.label }}</div>
         <div class="bc-borders-divider"></div>
-        <div class="bc-borders-action">复制</div>
+        <icon type="charm:copy" class="bc-borders-action" />
         <div class="bc-borders-divider"></div>
-        <div class="bc-borders-action">删除</div>
+        <icon type="ep:delete" class="bc-borders-action" @click.stop="handleClickDelete(index)" />
       </div>
     </drop-card>
 
@@ -77,7 +77,7 @@ interface MoveSchema {
 
 const props = withDefaults(defineProps<Props>(), {});
 
-const emit = defineEmits(['update:list', 'select']);
+const emit = defineEmits(['update:list', 'select', 'delete']);
 
 const { useInject } = useContext<Contenxt>('PageDesigner');
 
@@ -154,6 +154,10 @@ const setElement = (el: HTMLNULL) => drop(el);
 
 function handleClickTemeplate(record: Schema) {
   emit('select', record);
+}
+
+function handleClickDelete(index: number) {
+  emit('delete', index);
 }
 </script>
 

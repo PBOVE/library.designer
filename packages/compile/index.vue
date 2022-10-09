@@ -13,18 +13,24 @@
         </div>
       </div>
 
-      <!-- 物料 -->
-      <area-left />
+      <div class="bc-main">
+        <!-- 物料 -->
+        <area-left class="bc-main-left" />
 
-      <!-- 视图 -->
-      <area-main>
-        <template #default="record">
-          <slot name="view" v-bind="record"></slot>
-        </template>
-      </area-main>
+        <!-- 视图 -->
+        <area-main class="bc-main-container">
+          <template #default="data">
+            <slot name="view" v-bind="data"></slot>
+          </template>
+        </area-main>
 
-      <!-- 设置器 -->
-      <area-right />
+        <!-- 设置器 -->
+        <area-right class="bc-main-right">
+          <template #default="data">
+            <slot name="setter" v-bind="data"></slot>
+          </template>
+        </area-right>
+      </div>
     </dnd-provider>
   </div>
 </template>
@@ -106,16 +112,14 @@ watch(
 
 <style lang="less">
 .bc-wrap {
-  display: grid;
-  grid-template-rows: 54px 1fr;
-  grid-template-columns: 320px 1fr 400px;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
 }
 
 .bc-header {
-  grid-column-start: 1;
-  grid-column-end: 4;
+  height: 54px;
   padding: 0 16px;
   border-bottom: 1px solid var(--border-color);
 
@@ -127,17 +131,30 @@ watch(
   }
 }
 
+.bc-main {
+  display: flex;
+  flex: 1;
+  height: 0;
+}
+
+.bc-main-left {
+  width: 320px;
+}
+
+.bc-main-container {
+  flex: 1;
+}
+
+.bc-main-right {
+  width: 320px;
+}
+
 .bc-button {
   opacity: 0.6;
+  cursor: pointer;
 
   &:hover {
     opacity: 1;
-  }
-}
-
-@media screen and (max-width: 1800px) {
-  .bc-wrap {
-    grid-template-columns: 320px 1fr 330px;
   }
 }
 </style>

@@ -6,7 +6,7 @@
         :key="item.name"
         class="bc-right-tabs-tab"
         :class="{ 'bc-right-tabs-tab__active': selected === item.name }"
-        @click="handleClickTab(item, index)"
+        @click="handleSwitchTab(item, index)"
       >
         <div>{{ item.label }}</div>
       </div>
@@ -35,7 +35,7 @@ import type { Contenxt } from '#/editor';
 import useContext from '@/hooks/useContext';
 
 interface Props {
-  options: { label: string; name: string }[];
+  options: { label: string; name: string; [key: string]: unknown }[];
 }
 
 const props = withDefaults(defineProps<Props>(), { options: () => [] });
@@ -54,11 +54,21 @@ const selected = ref<string>(props.options?.[0].name);
 
 const width = computed(() => `${100 / props.options.length}%`);
 
-function handleClickTab(record: { name: string }, index: number) {
+function handleSwitchTab(record: { name: string }, index: number) {
   selected.value = record.name;
 
   transform.bar = `translate3d(${index * 100}%, 0, 0)`;
 }
+
+watch(
+  () => props.options,
+  () => {
+    // 重新设置
+    const result = props.options?.[0];
+
+    result && handleSwitchTab(result, 0);
+  }
+);
 </script>
 
 <style lang="less">
@@ -100,5 +110,11 @@ function handleClickTab(record: { name: string }, index: number) {
   border-bottom: 1px solid var(--border-color);
   font-size: 12px;
   line-height: 30px;
+}
+
+.bc-settings-content {
+  flex: 1;
+  height: 0;
+  overflow: auto;
 }
 </style>

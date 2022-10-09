@@ -1,19 +1,30 @@
 <template>
   <div :visible="visible" :divider="divider" :class="$style['wrap']">
-    <div :class="$style['container']" :type="type">
-      <div
-        :class="[$style['label'], labelClass, overlay && 'cursor-pointer']"
-        :style="{ width }"
-        @click="handleOpenCollapse"
-      >
-        <icon v-if="overlay" type="ant-design:caret-right-filled" :rotate="visible ? 90 : 0" :class="$style['icon']" />
-        <div :class="[isTitleAction && $style['field-title'], $style['label-title']]">
-          <slot name="label">{{ label }}</slot>
+    <div>
+      <div :class="$style['container']" :type="type">
+        <div
+          :class="[$style['label'], labelClass, overlay && 'cursor-pointer']"
+          :style="{ width }"
+          @click="handleOpenCollapse"
+        >
+          <icon
+            v-if="overlay"
+            type="ant-design:caret-right-filled"
+            :rotate="visible ? 90 : 0"
+            :class="$style['icon']"
+          />
+          <div :class="[isTitleAction && $style['field-title'], $style['label-title']]">
+            <slot name="label">{{ label }}</slot>
+          </div>
+        </div>
+
+        <div :class="$style['main']">
+          <slot></slot>
         </div>
       </div>
 
-      <div :class="$style['main']">
-        <slot></slot>
+      <div :class="$style['reminder']">
+        <slot name="reminder"></slot>
       </div>
     </div>
 
@@ -76,7 +87,8 @@ const overlay = computed(() => !!useSlots().overlay);
 
 function handleOpenCollapse() {
   if (overlay.value) {
-    visible.value = true;
+    // 存在插槽，在更新
+    visible.value = !visible.value;
   }
   //
 }
@@ -134,6 +146,13 @@ function handleOpenCollapse() {
   height: 32px;
 
   .flex-center();
+}
+
+.reminder {
+  padding-bottom: 4.7px;
+  font-size: 12px;
+  color: #999;
+  zoom: 0.84;
 }
 
 .overlay {

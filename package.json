@@ -12,6 +12,7 @@
     "@iconify/iconify": "^2.2.1",
     "@vueuse/core": "^9.2.0",
     "ant-design-vue": "^3.2.12",
+    "async-validator": "^4.2.5",
     "dayjs": "^1.11.5",
     "lodash-es": "^4.17.21",
     "pinia": "^2.0.22",

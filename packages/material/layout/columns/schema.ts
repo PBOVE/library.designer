@@ -2,5 +2,5 @@ import { Template } from '#/editor';
 
 export const template: Template = {
   label: '容器',
-  icon: 'ant-design:border-outlined'
+  icon: 'ant-design:layout-outlined'
 };

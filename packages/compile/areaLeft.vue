@@ -7,7 +7,7 @@
           :key="item.name"
           class="bc-left-tabs-tab"
           :class="{ 'bc-left-tabs-tab__active': selected === item.name }"
-          @click="handleClickTab(item)"
+          @click="handleSwitchTab(item)"
         >
           <icon :type="item.icon" size="20" />
         </div>
@@ -18,8 +18,9 @@
       <div></div>
     </div>
 
-    <div class="bc-left-tabs-content">
-      <div class="bc-left-tabs__track" :style="{ transform: transform.track }">
+    <div ref="instance" class="bc-left-tabs-content">
+      <div class="bc-left-tabs__track">
+        <div class="bc-left-slider-block" :style="{ marginTop: transform.track }"></div>
         <div v-for="item in options" :key="item.name" class="bc-left-tabs-tabpane">
           <div class="bc-left-tabs-title">{{ item.title }}</div>
           <component :is="item.name" />
@@ -52,6 +53,8 @@ const selected = ref<string>(options[0].name);
 
 const nav = ref<HTMLNULL>(null);
 
+const instance = ref<HTMLNULL>(null);
+
 const transform = reactive({ bar: '', track: '' });
 
 const currentIndex = computed(() => {
@@ -67,10 +70,10 @@ function setUnderlineIndex() {
 
   transform.bar = `translate3d(0, ${offsetTop + clientHeight / 2 - 10}px, 0)`;
 
-  transform.track = `translate3d(0, -${currentIndex.value * 100}%, 0)`;
+  transform.track = `-${currentIndex.value * (instance.value?.clientHeight || 0)}px`;
 }
 
-function handleClickTab(record: { name: string }) {
+function handleSwitchTab(record: { name: string }) {
   selected.value = record.name;
 
   nextTick(setUnderlineIndex);
@@ -83,69 +86,74 @@ onMounted(setUnderlineIndex);
 .bc-left-tabs {
   display: flex;
   border-right: 1px solid var(--border-color);
+}
 
-  &-nav {
-    position: relative;
-  }
+.bc-left-tabs-nav {
+  position: relative;
+}
 
-  &-wrap {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-top: 15px;
-    border-right: 1px solid var(--border-color);
-  }
+.bc-left-tabs-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 15px;
+  border-right: 1px solid var(--border-color);
+}
 
-  &-tab {
-    flex-direction: column;
-    width: 50px;
-    padding: 13px 0;
-    cursor: pointer;
-    .flex-center();
-
-    &-title {
-      margin-top: 8px;
-      font-size: 12px;
-    }
-
-    &__active {
-      color: @primary-color;
-    }
-  }
-
-  &-content {
-    width: 100%;
-    overflow: hidden;
-  }
-
-  &-tabpane {
-    width: 100%;
-    height: 100%;
-  }
-
-  &-ink-bar {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 2px;
-    height: 20px;
-    border-radius: 2px;
-    background: @primary-color;
-    transition-duration: 0.3s;
-  }
-
-  &__track {
-    width: 100%;
-    height: 100%;
-    transition-duration: 0.3s;
-  }
+.bc-left-tabs-tab {
+  flex-direction: column;
+  width: 50px;
+  padding: 13px 0;
+  cursor: pointer;
+  .flex-center();
 
   &-title {
-    height: 48px;
-    padding: 0 15px;
-    font-size: 16px;
-    color: var(--text-color);
-    .flex-y-center();
+    margin-top: 8px;
+    font-size: 12px;
   }
+
+  &__active {
+    color: @primary-color;
+  }
+}
+
+.bc-left-tabs-content {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.bc-left-tabs-tabpane {
+  width: 100%;
+  height: 100%;
+}
+
+.bc-left-tabs-ink-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 20px;
+  border-radius: 2px;
+  background: @primary-color;
+  transition-duration: 0.3s;
+}
+
+.bc-left-tabs__track {
+  width: 100%;
+  height: 100%;
+  transition-duration: 0.3s;
+}
+
+.bc-left-tabs-title {
+  height: 48px;
+  padding: 0 15px;
+  font-size: 16px;
+  color: var(--text-color);
+  .flex-y-center();
+}
+
+.bc-left-slider-block {
+  transition: margin 0.3s ease-in-out;
 }
 </style>

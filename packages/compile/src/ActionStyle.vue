@@ -1,11 +1,5 @@
 <template>
-  <a-collapse v-model:activeKey="activeNames" :class="$style['wrap']" ghost expand-icon-position="right">
-    <template #expandIcon="{ isActive }">
-      <div>
-        <icon type="ep:arrow-down" :rotate="isActive ? -180 : 0" />
-      </div>
-    </template>
-
+  <global-collapse v-model:activeKey="activeNames" ghost expand-icon-position="right">
     <a-collapse-panel key="setting" header="样式设置">
       <action-row label="状态">
         <global-select v-model:value="styleState" class="w-full" :options="stateOptions" />
@@ -41,7 +35,7 @@
         <global-select v-model:value="styleData.cursor" :options="[{ value: 'default' }, { value: 'pointer' }]" />
       </action-row>
     </a-collapse-panel>
-  </a-collapse>
+  </global-collapse>
 </template>
 
 <script lang="ts" setup>
@@ -103,7 +97,6 @@ watch(
 watch(
   () => styleData.value,
   (value) => {
-    console.log('1');
     if (isValueUpdateFromOuter) {
       isValueUpdateFromOuter = false;
     } else {
@@ -125,25 +118,3 @@ const stateOptions = [
   { label: ':active', value: ':root:active' }
 ];
 </script>
-
-<style lang="less" module>
-.wrap {
-  :global {
-    .ant-collapse-header {
-      position: sticky !important;
-      top: 0;
-      z-index: 100;
-      align-items: center !important;
-      height: 32px;
-      padding: 0 12px 0 !important;
-      border-bottom: 1px solid #f0f0f0;
-      background-color: #f2f3f5;
-      user-select: none;
-    }
-
-    .ant-collapse-content-box {
-      padding: 0 !important;
-    }
-  }
-}
-</style>

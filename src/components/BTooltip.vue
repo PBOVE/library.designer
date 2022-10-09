@@ -1,5 +1,3 @@
-import { title } from 'process';
-
 <template>
   <div
     class="b-tooltip-wrap"

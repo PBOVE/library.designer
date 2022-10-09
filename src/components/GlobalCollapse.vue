@@ -1,5 +1,11 @@
 <template>
   <a-collapse class="b-collapse">
+    <template #expandIcon="{ isActive }">
+      <div>
+        <icon type="ep:arrow-down" :rotate="isActive ? -180 : 0" />
+      </div>
+    </template>
+
     <slot></slot>
   </a-collapse>
 </template>
