@@ -12,11 +12,11 @@ import DragCard from './DragCard.vue';
 
 interface Props {
   //  渲染列表数据
-  list: Required<Template>[];
+  list: PickRequired<Template, 'name'>[];
 
   itemKey: string;
 
-  clone?: (item: Template) => { name: string; label: string };
+  clone?: (item: Template) => Omit<Template, 'icon'>;
 }
 
 withDefaults(defineProps<Props>(), {

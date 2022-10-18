@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { DEFAULT_LAYOUT_COMPONENT } from '../constant';
 
-const modulesRouters = import.meta.globEager('./modules/**.ts');
+const modulesRouters: Indexable<{ default: RouteRecordRaw[] }> = import.meta.glob('./modules/**.ts', { eager: true });
 
 // 主框架根路由
 const RootRoute: RouteRecordRaw = {

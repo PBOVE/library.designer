@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import windiCSS from 'vite-plugin-windicss';
 import VueSetupExtend from 'vite-plugin-vue-setup-extend';
+import VueTypeImports from 'vite-plugin-vue-type-imports';
 import autoImport from './auto-import';
 
 export function createVitePlugins() {
@@ -10,7 +11,9 @@ export function createVitePlugins() {
     // have to
     vue(),
     // have to
-    vueJsx()
+    vueJsx(),
+    // 类型导入
+    VueTypeImports()
   ];
 
   // vite-plugin-windicss

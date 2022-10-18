@@ -1,14 +1,15 @@
 <template>
   <div :ref="setElement">
-    <div v-if="isOver && !positionDown" :class="$style.divider"></div>
+    <div v-if="isOver && !positionDown" class="bc-drop-divider"></div>
     <slot></slot>
-    <div v-if="isOver && positionDown" :class="$style.divider"></div>
+    <div v-if="isOver && positionDown" class="bc-drop-divider"></div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { Schema } from '#/editor';
 import { useDrag, useDrop } from 'vue3-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 
 interface Props {
   index: number;
@@ -26,21 +27,23 @@ interface MoveSchema {
 
 const props = withDefaults(defineProps<Props>(), {});
 
-const emit = defineEmits(['append', 'move']);
+const emit = defineEmits(['append', 'move', 'change']);
 
 const wrapRef = ref<HTMLNULL>(null);
 
 const positionDown = ref<boolean>(true);
 
-const [, drag] = useDrag(() => ({
+const [collectByDrag, drag, connectDragPreview] = useDrag(() => ({
   type: 'PageDesigner',
-  item: () => ({ id: props.schema.id, originalIndex: props.index, schema: props.schema }),
+  item: () => ({ id: props.schema.id, label: props.schema.label, originalIndex: props.index, schema: props.schema }),
   collect: (monitor) => ({
     isDragging: monitor.isDragging()
   })
 }));
 
-const [collect, drop] = useDrop(() => ({
+connectDragPreview(getEmptyImage());
+
+const [collectByDrop, drop] = useDrop(() => ({
   accept: 'PageDesigner',
   drop: (item: Schema | MoveSchema, monitor) => {
     if (monitor.didDrop()) {
@@ -91,17 +94,24 @@ const [collect, drop] = useDrop(() => ({
   })
 }));
 
-const isOver = computed(() => collect.value.isOver);
+const isOver = computed(() => collectByDrop.value.isOver);
+
+const isDragging = computed(() => collectByDrag.value.isDragging);
 
 const setElement = (el: HTMLNULL) => {
   drag(drop(el));
 
   wrapRef.value = el;
 };
+
+watch(
+  () => isDragging.value,
+  (value) => emit('change', value, props.schema)
+);
 </script>
 
-<style lang="less" module>
-.divider {
+<style lang="less">
+.bc-drop-divider {
   outline: 1px solid @primary-color;
 }
 </style>

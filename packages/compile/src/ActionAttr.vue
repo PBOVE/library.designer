@@ -1,5 +1,5 @@
 <template>
-  <global-collapse ghost expand-icon-position="right">
+  <global-collapse v-model:activeKey="activeNames" ghost expand-icon-position="right">
     <a-collapse-panel key="setting" header="高级">
       <action-row label="唯一标识">
         <a-input readonly :value="schemaId" />
@@ -17,4 +17,7 @@ const { useInject } = useContext<Contenxt>('PageDesigner');
 const { selectSchema } = useInject();
 
 const schemaId = computed(() => selectSchema.get()?.id);
+
+// 展开的标签
+const activeNames = ref('setting');
 </script>

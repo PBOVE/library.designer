@@ -37,7 +37,7 @@ const { useInject } = useContext<Contenxt>('PageDesigner');
 
 const { templateTree } = useInject();
 
-const onCloneData = ({ name, label }: Required<Template>) => ({ name, label });
+const onCloneData = (data: Template) => omit(data, ['icon']);
 
 // 渲染组件
 const treeData = computed(() => {

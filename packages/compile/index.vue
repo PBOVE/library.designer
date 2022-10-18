@@ -31,6 +31,9 @@
           </template>
         </area-right>
       </div>
+
+      <!-- 自定义拖拽层 -->
+      <drag-layer />
     </dnd-provider>
   </div>
 </template>
@@ -41,9 +44,10 @@ import { DndProvider } from 'vue3-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { cloneDeep, isNull, set } from 'lodash-es';
 import useContext from '@/hooks/useContext';
-import areaLeft from './areaLeft.vue';
-import areaMain from './areaMain.vue';
-import areaRight from './areaRight.vue';
+import AreaLeft from './src/AreaLeft.vue';
+import AreaMain from './src/AreaMain.vue';
+import AreaRight from './src/AreaRight.vue';
+import { DragLayer } from './draggable';
 
 interface Props {
   // 模版树
@@ -114,8 +118,6 @@ watch(
 .bc-wrap {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
 }
 
 .bc-header {
@@ -138,6 +140,7 @@ watch(
 }
 
 .bc-main-left {
+  flex-shrink: 0;
   width: 320px;
 }
 
@@ -146,6 +149,7 @@ watch(
 }
 
 .bc-main-right {
+  flex-shrink: 0;
   width: 320px;
 }
 

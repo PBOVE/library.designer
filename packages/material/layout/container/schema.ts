@@ -2,12 +2,10 @@ import { Template } from '#/editor';
 import { Props } from './interface';
 
 export const template: Template<Props> = {
-  label: '布局容器',
+  label: '容器',
 
-  icon: 'ant-design:layout-outlined',
+  icon: 'ant-design:border-outlined',
 
-  props: {
-    // 列比例
-    layout: '12:9:3'
-  }
+  // 子数据
+  children: []
 };

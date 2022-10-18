@@ -6,14 +6,22 @@
       :schema="item"
       :index="index"
       class="bc-drop-container"
-      :class="{ 'is-selected': selectSchemaId === item.id }"
+      :class="{
+        'is-hover': !dragging.state,
+        'is-selected': selectSchemaId === item.id && !dragging.state
+      }"
       @move="hadnleMoveSchema"
       @append="handleAppendSchema"
-      @click="handleClickTemeplate(item)"
+      @click.stop="handleClickTemeplate(item)"
+      @change="handleDropChange"
     >
+      <!-- 视图 -->
       <slot v-bind="item"></slot>
 
-      <div v-if="selectSchemaId === item.id" class="bc-borders-actions">
+      <div v-if="dragging.id === item.id && dragging.state" class="bc-dragging-mask"></div>
+
+      <!-- 操作 -->
+      <div v-if="selectSchemaId === item.id && !dragging.state" class="bc-borders-actions">
         <div class="bc-borders-action">{{ item.label }}</div>
         <div class="bc-borders-divider"></div>
         <icon type="charm:copy" class="bc-borders-action" />
@@ -28,17 +36,19 @@
     </div>
 
     <!-- 分割线 -->
-    <!-- <div v-if="isOver && !isEmptyContainer" :class="$style.divider"></div> -->
+    <div v-if="isOver && !isEmptyContainer" class="bc-drop-divider"></div>
   </div>
 </template>
 
 <script lang="ts" setup name="AreaContainer">
 import type { Schema, Contenxt } from '#/editor';
+import type { TemplateData } from '~/compile/utils/index';
 import { useDrop } from 'vue3-dnd';
 import { isEmpty, isArray } from 'lodash-es';
+import { useVModel } from '@vueuse/core';
 import { move } from '@/utils';
-import { buildSchemId } from '@/utils/uuid';
 import useContext from '@/hooks/useContext';
+import { buildSchema } from '~/compile/utils/index';
 import DropCard from './DropCard.vue';
 
 interface Props {
@@ -77,7 +87,7 @@ interface MoveSchema {
 
 const props = withDefaults(defineProps<Props>(), {});
 
-const emit = defineEmits(['update:list', 'select', 'delete']);
+const emit = defineEmits(['update:list', 'change']);
 
 const { useInject } = useContext<Contenxt>('PageDesigner');
 
@@ -85,13 +95,9 @@ const { selectSchema } = useInject();
 
 const selectSchemaId = computed(() => selectSchema.get()?.id);
 
-const dataSource = computed({
-  get: () => props.list,
-  set: (value) => emit('update:list', value)
-});
+const dragging = reactive({ state: false, id: '' });
 
-// 构建数据
-const buildSchem = (data: Schema) => ({ ...data, __style__: {}, props: {}, id: buildSchemId(data.name) });
+const dataSource = useVModel(props, 'list', emit);
 
 // 处理添加模型
 function handleAppendSchema(context: AppendContext) {
@@ -99,13 +105,15 @@ function handleAppendSchema(context: AppendContext) {
   if (isArray(target?.children)) {
     // 是容器
   } else {
-    dataSource.value.splice(targetI + (isDown ? 1 : 0), 0, buildSchem(data));
+    dataSource.value.splice(targetI + (isDown ? 1 : 0), 0, buildSchema(data));
   }
 }
 
 //  处理移动模型
 function hadnleMoveSchema(context: MoveContext) {
-  const { sourceI, targetI, isDown = false, target } = context;
+  const { sourceI, targetI, isDown = false, target, data } = context;
+
+  selectSchema.set(data);
 
   if (sourceI === targetI) return;
 
@@ -116,27 +124,40 @@ function hadnleMoveSchema(context: MoveContext) {
   }
 }
 
+function handleClickTemeplate(record: Schema) {
+  selectSchema.set(record);
+}
+
+function handleClickDelete(index: number) {
+  dataSource.value.splice(index, 1);
+
+  selectSchema.set(null);
+}
+
 const [collect, drop] = useDrop({
   accept: 'PageDesigner',
-  drop: (item: Schema | MoveSchema, monitor) => {
+  drop: (item: TemplateData | MoveSchema, monitor) => {
     const didDrop = monitor.didDrop(); // returns false for direct drop target
     if (didDrop) {
       return;
     }
 
-    // 没有 id 就是新增
-    if (!item.id) {
-      const schema = buildSchem(item as Schema);
-      // 新增数据
-      dataSource.value.push(schema);
-    } else {
+    if ((item as MoveSchema).id) {
       const sourceI = (item as MoveSchema).originalIndex;
 
       const { schema } = item as MoveSchema;
-
       // 移动数据
       hadnleMoveSchema({ sourceI, targetI: dataSource.value.length, data: schema });
+    } else {
+      // 没有 id 就是新增
+      const schema = buildSchema(item as TemplateData);
+      // 新增数据
+      dataSource.value.push(schema);
+
+      handleClickTemeplate(schema);
     }
+
+    emit('change');
   },
   collect: (monitor) => ({
     isOver: monitor.isOver({ shallow: true }),
@@ -152,12 +173,10 @@ const isMouseEnter = computed(() => !!(collect.value.canDrop && isOver.value));
 // 设置 dom
 const setElement = (el: HTMLNULL) => drop(el);
 
-function handleClickTemeplate(record: Schema) {
-  emit('select', record);
-}
+function handleDropChange(value: boolean, schema: Schema) {
+  dragging.state = value;
 
-function handleClickDelete(index: number) {
-  emit('delete', index);
+  dragging.id = schema.id;
 }
 </script>
 
@@ -170,7 +189,7 @@ function handleClickDelete(index: number) {
 .bc-drop-container {
   position: relative;
 
-  &:hover {
+  &.is-hover:hover {
     outline: 1px dashed @primary-color;
     outline-offset: -1px;
     background: #197aff10;
@@ -179,7 +198,18 @@ function handleClickDelete(index: number) {
   &.is-selected {
     outline: 2px solid @primary-color;
     outline-offset: -2px;
+
+    &:hover {
+      outline: 2px solid @primary-color;
+      outline-offset: -2px;
+    }
   }
+}
+
+.bc-dragging-mask {
+  position: absolute;
+  inset: 0;
+  background: fade(#595959, 40);
 }
 
 .bc-empty {
@@ -189,6 +219,7 @@ function handleClickDelete(index: number) {
     align-items: center;
     width: 100%;
     height: 100%;
+    min-height: 60px;
     border: 1px dotted;
     color: #a7b1bd;
     background-color: #f0f0f0;
@@ -199,7 +230,7 @@ function handleClickDelete(index: number) {
   }
 }
 
-.divider {
+.bc-drop-divider {
   outline: 1px solid @primary-color;
 }
 

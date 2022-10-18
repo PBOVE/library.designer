@@ -2,5 +2,13 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
     "source.fixAll.stylelint": true
-  }
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "vue",
+    "typescript"
+  ],
+  "stylelint.enable": true,
+  "stylelint.validate": ["css", "scss", "vue"],
 }

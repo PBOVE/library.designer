@@ -1,4 +1,4 @@
-import type { CSSProperties, Component } from 'vue';
+import type { CSSProperties } from 'vue';
 
 type Props = Indexable;
 
@@ -21,7 +21,7 @@ export interface Params {
 }
 
 // 组件数据
-export interface Schema {
+export interface Schema<T = Props> {
   // 组件名称
   label: string;
 
@@ -32,7 +32,7 @@ export interface Schema {
   id: string;
 
   // 配置信息
-  props: Props;
+  props: T;
 
   // 不同状态样式
   __style__: Recordable<CSSProperties>;
@@ -41,8 +41,9 @@ export interface Schema {
   children?: Schema[];
 }
 
+
 // 模版名称
-export interface Template {
+export interface Template<T = Props> {
   // 名称
   label: string;
 
@@ -51,6 +52,12 @@ export interface Template {
 
   // 图标
   icon: string;
+
+  // 配置信息
+  props?: T;
+
+  // 子数据
+  children?: Schema<T>[];
 }
 
 // 模版树
@@ -59,7 +66,7 @@ export interface TemplateTree {
 
   level: string;
 
-  children: Required<Template>[];
+  children: PickRequired<Template, 'name'>[];
 }
 
 // 页面数据
@@ -146,6 +153,3 @@ export interface Setter {
   }
 }
 
-export interface AutoComponent {
-  default: Component
-}

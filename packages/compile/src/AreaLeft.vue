@@ -31,10 +31,10 @@
 </template>
 
 <script lang="ts">
-import TabPaneTemplate from './src/TabPaneTemplate.vue';
-import TabPaneTree from './src/TabPaneTree.vue';
-import TabPaneModule from './src/TabPaneModule.vue';
-import TabPaneDatabase from './src/TabPaneDatabase.vue';
+import TabPaneTemplate from './TabPaneTemplate.vue';
+import TabPaneTree from './TabPaneTree.vue';
+import TabPaneModule from './TabPaneModule.vue';
+import TabPaneDatabase from './TabPaneDatabase.vue';
 
 export default defineComponent({
   components: { TabPaneTemplate, TabPaneTree, TabPaneModule, TabPaneDatabase }

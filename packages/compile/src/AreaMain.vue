@@ -53,15 +53,11 @@
 
     <div class="bc-main-area">
       <div :class="['bc-simulator-canvas', `bc-simulator-${layoutType}`]">
-        <drop-container
-          v-model:list="widgetTree"
-          class="bc-compile"
-          item-key="id"
-          @select="handleSeleteTemplate"
-          @delete="handleDeleteTemplate"
-        >
+        <drop-container v-model:list="widgetTree" class="bc-compile" item-key="id">
           <template #default="record">
-            <slot v-bind="record"></slot>
+            <view-container :style="record.__style__">
+              <slot v-bind="record"></slot>
+            </view-container>
           </template>
         </drop-container>
       </div>
@@ -78,9 +74,10 @@
 <script lang="ts" setup>
 import type { Contenxt, Schema } from '#/editor';
 import useContext from '@/hooks/useContext';
-import HistoryDrawer from './components/HistoryDrawer.vue';
-import ShortcutsModal from './components/ShortcutsModal.vue';
-import { DropContainer } from './draggable';
+import HistoryDrawer from '../components/HistoryDrawer.vue';
+import ShortcutsModal from '../components/ShortcutsModal.vue';
+import { DropContainer } from '../draggable';
+import ViewContainer from './ViewContainer.vue';
 
 type LayoutType = 'pc' | 'h5';
 
@@ -111,17 +108,7 @@ function handleClickKeyboard() {
   visible.keyboard = true;
 }
 
-function handleSeleteTemplate(record: Schema) {
-  selectSchema.set(record);
-}
-
 function handleClickPageSetting() {
-  selectSchema.set(null);
-}
-
-function handleDeleteTemplate(index: number) {
-  widgetTree.value.splice(index, 1);
-
   selectSchema.set(null);
 }
 </script>
@@ -143,6 +130,7 @@ function handleDeleteTemplate(index: number) {
 
 .bc-main-area {
   flex: 1;
+  height: 0;
   padding: 16px;
   background-color: #edeff3;
 }
@@ -168,6 +156,7 @@ function handleDeleteTemplate(index: number) {
 
   &-canvas {
     height: 100%;
+    overflow: auto;
     background: #f2f3f5;
     box-shadow: 0 1px 4px 0 rgb(31 50 88 / 13%);
   }

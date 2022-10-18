@@ -33,7 +33,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
        * 端口号
        * @default 3000
        */
-      port: 8099,
+      port: 10001,
 
       /**
        * 运行自动打开浏览器·

@@ -12,14 +12,12 @@ import type { DragSourceMonitor } from 'vue3-dnd';
 import { useDrag } from 'vue3-dnd';
 
 interface Props {
-  item: Template;
+  item: PickRequired<Template, 'name'>;
 
-  clone?: (item: Template) => { name: string; label: string };
+  clone?: (item: Template) => Omit<Template, 'icon'>;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  clone: undefined
-});
+const props = withDefaults(defineProps<Props>(), { clone: undefined });
 
 const [, drag] = useDrag(() => ({
   type: 'PageDesigner',

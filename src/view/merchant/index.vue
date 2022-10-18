@@ -3,17 +3,20 @@
     <template #title> TIBIS </template>
 
     <template #view="record">
-      <component :is="views[record.name]" />
+      <render-widget v-model:children="record.children" :name="record.name" :props="record.props" />
     </template>
 
     <template #setter="{ view, schema }">
-      <component :is="setters[schema.name][view]" />
+      <component :is="setters[schema.name][view]" v-model:value="schema.props" />
     </template>
   </page-compile>
 </template>
 
 <script lang="ts" setup>
-import type { TemplateTree, Page, Module, Setter, AutoComponent } from '#/editor';
+import type { TemplateTree, Page, Module, Setter } from '#/editor';
+import PageCompile from '~/compile/index.vue';
+import RenderWidget from './components/RenderWidget.vue';
+
 // 模型工具源
 const gSchemaSource: Indexable<Module> = import.meta.glob('~/material/**/schema.ts', { eager: true });
 
@@ -71,7 +74,7 @@ Object.entries(gViewSource).forEach(([key, component]) => {
   views[name] = component.default;
 });
 
-console.log(setters);
+console.log(setters, views);
 
 // const TabPane =
 </script>

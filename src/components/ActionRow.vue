@@ -2,11 +2,13 @@
   <div :visible="visible" :divider="divider" :class="$style['wrap']">
     <div>
       <div :class="$style['container']" :type="type">
+        <!-- 标题 -->
         <div
           :class="[$style['label'], labelClass, overlay && 'cursor-pointer']"
           :style="{ width }"
           @click="handleOpenCollapse"
         >
+          <!-- 折叠图标 -->
           <icon
             v-if="overlay"
             type="ant-design:caret-right-filled"
@@ -18,16 +20,19 @@
           </div>
         </div>
 
+        <!-- 内容 -->
         <div :class="$style['main']">
           <slot></slot>
         </div>
       </div>
 
+      <!-- 提示 -->
       <div :class="$style['reminder']">
         <slot name="reminder"></slot>
       </div>
     </div>
 
+    <!-- 折叠 -->
     <b-collapse-transition>
       <div v-if="overlay" v-show="visible" :class="[$style['overlay'], overlayClass]">
         <slot name="overlay"></slot>
@@ -119,6 +124,8 @@ function handleOpenCollapse() {
     .main {
       flex: 1;
       width: 0;
+
+      .justify-end();
     }
   }
 

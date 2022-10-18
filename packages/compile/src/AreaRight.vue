@@ -13,11 +13,11 @@
 <script lang="ts">
 import type { Contenxt } from '#/editor';
 import useContext from '@/hooks/useContext';
-import InterfaceSetter from './src/PageSetter/Interface.vue';
-import AttributeSetter from './src/PageSetter/attribute.vue';
-import ActionTab from './src/ActionTab.vue';
-import StyleSetter from './src/ActionStyle.vue';
-import Attribute from './src/ActionAttr.vue';
+import InterfaceSetter from './PageSetter/Interface.vue';
+import AttributeSetter from './PageSetter/attribute.vue';
+import ActionTab from './ActionTab.vue';
+import StyleSetter from './ActionStyle.vue';
+import Attribute from './ActionAttr.vue';
 
 export default defineComponent({
   components: { InterfaceSetter, AttributeSetter, ActionTab, Attribute, StyleSetter },

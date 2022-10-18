@@ -129,6 +129,7 @@ watch(
   line-height: 18px;
   text-align: center;
   background-color: #f1f1f1;
+  cursor: pointer;
 }
 
 .wrap {
