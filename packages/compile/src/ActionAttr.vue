@@ -2,7 +2,7 @@
   <global-collapse v-model:activeKey="activeNames" ghost expand-icon-position="right">
     <a-collapse-panel key="setting" header="高级">
       <action-row label="唯一标识">
-        <a-input readonly :value="schemaId" />
+        <global-input readonly :value="schemaId" />
       </action-row>
     </a-collapse-panel>
   </global-collapse>

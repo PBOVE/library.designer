@@ -3,13 +3,11 @@
     <drop-card
       v-for="(item, index) in dataSource"
       :key="item.id"
+      v-element-hover="(state: boolean) => handleNodeHover(state, item)"
       :schema="item"
       :index="index"
       class="bc-drop-container"
-      :class="{
-        'is-hover': !dragging.state,
-        'is-selected': selectSchemaId === item.id && !dragging.state
-      }"
+      :style="handelWidgetStyle(item)"
       @move="hadnleMoveSchema"
       @append="handleAppendSchema"
       @click.stop="handleClickTemeplate(item)"
@@ -17,11 +15,19 @@
     >
       <!-- 视图 -->
       <slot v-bind="item"></slot>
-
+      <!-- 悬浮层 -->
       <div v-if="dragging.id === item.id && dragging.state" class="bc-dragging-mask"></div>
 
+      <div
+        class="bc-widget-mask"
+        :class="{
+          'is-hover': hoverId === item.id && !dragging.state,
+          'is-selected': selectId === item.id && !dragging.state
+        }"
+      ></div>
+
       <!-- 操作 -->
-      <div v-if="selectSchemaId === item.id && !dragging.state" class="bc-borders-actions">
+      <div v-if="selectId === item.id && !dragging.state" ref="actions" class="bc-borders-actions" :style="actionStyle">
         <div class="bc-borders-action">{{ item.label }}</div>
         <div class="bc-borders-divider"></div>
         <icon type="charm:copy" class="bc-borders-action" />
@@ -43,9 +49,11 @@
 <script lang="ts" setup name="AreaContainer">
 import type { Schema, Contenxt } from '#/editor';
 import type { TemplateData } from '~/compile/utils/index';
+import type { CSSProperties } from 'vue';
 import { useDrop } from 'vue3-dnd';
-import { isEmpty, isArray } from 'lodash-es';
+import { isEmpty, isArray, kebabCase } from 'lodash-es';
 import { useVModel } from '@vueuse/core';
+import { vElementHover } from '@vueuse/components';
 import { move } from '@/utils';
 import useContext from '@/hooks/useContext';
 import { buildSchema } from '~/compile/utils/index';
@@ -91,13 +99,21 @@ const emit = defineEmits(['update:list', 'change']);
 
 const { useInject } = useContext<Contenxt>('PageDesigner');
 
-const { selectSchema } = useInject();
+const { selectSchema, hoverSchema } = useInject();
 
-const selectSchemaId = computed(() => selectSchema.get()?.id);
+const selectWidget = computed(() => selectSchema.get());
+
+const selectId = computed(() => unref(selectWidget)?.id);
+
+const hoverId = computed(() => hoverSchema.get()?.id);
 
 const dragging = reactive({ state: false, id: '' });
 
 const dataSource = useVModel(props, 'list', emit);
+
+const actionStyle = ref<CSSProperties>({});
+
+const actions = ref<HTMLNULL>(null);
 
 // 处理添加模型
 function handleAppendSchema(context: AppendContext) {
@@ -123,15 +139,19 @@ function hadnleMoveSchema(context: MoveContext) {
     move(dataSource.value, sourceI, targetI + (isDown ? 1 : 0));
   }
 }
-
+// 点击
 function handleClickTemeplate(record: Schema) {
   selectSchema.set(record);
 }
-
+// 删除
 function handleClickDelete(index: number) {
   dataSource.value.splice(index, 1);
 
   selectSchema.set(null);
+}
+// 悬浮
+function handleNodeHover(state: boolean, record: Schema) {
+  hoverSchema.set(state ? record : null);
 }
 
 const [collect, drop] = useDrop({
@@ -178,6 +198,25 @@ function handleDropChange(value: boolean, schema: Schema) {
 
   dragging.id = schema.id;
 }
+
+function handelWidgetStyle(schema: Schema) {
+  const result = Object.entries(schema.__style__[':root'] || {});
+
+  return result.reduce((total, [key, value]) => `${total} ${kebabCase(key)}: ${value};`, '');
+}
+
+function handleActionUpdate() {
+  const clientWidth = document.querySelector('.bc-borders-actions')?.clientWidth || 0;
+
+  const width = parseFloat(selectWidget.value?.__style__[':root']?.width as string);
+
+  actionStyle.value = clientWidth > width ? { right: 'auto', left: 0 } : {};
+}
+
+watch(
+  () => selectWidget.value?.__style__[':root']?.width,
+  () => nextTick(handleActionUpdate)
+);
 </script>
 
 <style lang="less">
@@ -188,21 +227,21 @@ function handleDropChange(value: boolean, schema: Schema) {
 
 .bc-drop-container {
   position: relative;
+  white-space: nowrap;
+}
 
-  &.is-hover:hover {
-    outline: 1px dashed @primary-color;
-    outline-offset: -1px;
+.bc-widget-mask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  &.is-hover {
+    border: 1px dashed @primary-color;
     background: #197aff10;
   }
 
   &.is-selected {
-    outline: 2px solid @primary-color;
-    outline-offset: -2px;
-
-    &:hover {
-      outline: 2px solid @primary-color;
-      outline-offset: -2px;
-    }
+    border: 2px solid @primary-color;
   }
 }
 

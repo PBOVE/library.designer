@@ -1,5 +1,5 @@
 <template>
-  <action-row label="背景" label-class="!w-full" :is-value="styleBackground">
+  <action-row label="背景" label-class="!w-full" :is-value="styleBackground" divider>
     <template #overlay>
       <!-- 填充图 -->
       <action-row label-width="30px" :is-value="styleData.backgroundColor">

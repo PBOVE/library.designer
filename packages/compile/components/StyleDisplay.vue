@@ -1,5 +1,5 @@
 <template>
-  <action-row label="显示" :is-value="value">
+  <action-row label="显示" :is-value="value" divider>
     <global-select v-model:value="selected" :options="options" />
   </action-row>
 </template>

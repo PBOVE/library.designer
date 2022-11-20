@@ -11,25 +11,25 @@
     </template>
 
     <action-row label="名称" :divider="false">
-      <a-input v-model:value="dataItem.name" placeholder="请输入" />
+      <global-input v-model:value="dataItem.name" placeholder="请输入" />
     </action-row>
 
     <action-row label="描述" :divider="false">
-      <a-input v-model:value="dataItem.description" placeholder="请输入" />
+      <global-input v-model:value="dataItem.description" placeholder="请输入" />
     </action-row>
 
     <b-collapse-divider title="数据" />
 
     <action-row label="字段名称" :divider="false" type="vertical">
-      <a-input v-model:value="dataItem.initialData!.key" placeholder="请输入" />
+      <global-input v-model:value="dataItem.initialData!.key" placeholder="请输入" />
     </action-row>
 
     <action-row label="字段类型" :divider="false" type="vertical">
-      <a-input v-model:value="dataItem.initialData!.value" placeholder="请输入" />
+      <global-input v-model:value="dataItem.initialData!.value" placeholder="请输入" />
     </action-row>
 
     <action-row label="值" :divider="false" type="vertical">
-      <a-input v-model:value="dataItem.initialData!.value" placeholder="请输入" />
+      <global-input v-model:value="dataItem.initialData!.value" placeholder="请输入" />
     </action-row>
   </global-drawer>
 </template>

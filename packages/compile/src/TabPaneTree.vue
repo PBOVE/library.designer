@@ -1,5 +1,5 @@
 <template>
-  <div class="bc-tree">
+  <div ref="wrap" class="bc-tree">
     <tab-pane-tree-node :list="widgetTree" />
   </div>
 </template>
@@ -19,5 +19,14 @@ const widgetTree = computed(() => onInstance.get('widgetTree'));
 <style lang="less">
 .bc-tree {
   border-top: 1px solid var(--border-color);
+
+  &:hover .bc-tree-node-branches::before {
+    position: absolute;
+    left: var(--branches-left);
+    width: 1px;
+    height: 100%;
+    background: #e7e7e8;
+    content: '';
+  }
 }
 </style>

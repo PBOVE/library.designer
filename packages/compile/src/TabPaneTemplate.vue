@@ -2,7 +2,7 @@
   <tab-container>
     <template #head>
       <div class="bc-component-search">
-        <a-input v-model:value="inputSearch" placeholder="搜索组件" />
+        <global-input v-model:value="inputSearch" placeholder="搜索组件" />
       </div>
     </template>
 

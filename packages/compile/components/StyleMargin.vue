@@ -1,5 +1,5 @@
 <template>
-  <action-row label="外边距" :is-value="margin">
+  <action-row label="外边距" :is-value="margin" divider>
     <unit-input-number v-model:value="margin.value" :placeholder="placeholder" @change="hadnleValueChange" />
 
     <template #overlay>

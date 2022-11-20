@@ -1,4 +1,6 @@
 import { Template } from '#/editor';
+import { buildSchema } from '~/compile/utils/index';
+import { template as cTemplate } from '~/material/layout/container/schema';
 import { Props } from './interface';
 
 export const template: Template<Props> = {
@@ -9,5 +11,7 @@ export const template: Template<Props> = {
   props: {
     // 列比例
     layout: '12:9:3'
-  }
+  },
+
+  children: []
 };

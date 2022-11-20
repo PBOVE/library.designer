@@ -33,8 +33,11 @@ const views: Indexable = {};
 // 工具树
 const templateTree: TemplateTree[] = [
   { label: '布局', level: 'layout', children: [] },
-  { label: '基本', level: 'base', children: [] }
+  { label: '基本', level: 'base', children: [] },
+  { label: '表单', level: 'form', children: [] }
 ];
+
+const createWidgetName = (level: string, name: string) => `${level}-${name}`;
 
 Object.entries(gSchemaSource).forEach(([key, module]) => {
   const match = key.match(/^.+\/material\/(.*)\/(.*)\/schema.ts$/i);
@@ -47,7 +50,9 @@ Object.entries(gSchemaSource).forEach(([key, module]) => {
 
   if (index === -1) return;
 
-  templateTree[index].children.push({ ...module.template, name });
+  const widgetName = createWidgetName(level, name);
+
+  templateTree[index].children.push({ ...module.template, name: widgetName });
 });
 
 Object.entries(gAttrSource).forEach(([key, component]) => {
@@ -55,11 +60,13 @@ Object.entries(gAttrSource).forEach(([key, component]) => {
 
   if (!match) return;
 
-  const [, , name] = match;
+  const [, level, name] = match;
 
-  setters[name] ||= {};
+  const widgetName = createWidgetName(level, name);
 
-  setters[name].attribute = component.default;
+  setters[widgetName] ||= {};
+
+  setters[widgetName].attribute = component.default;
 });
 
 Object.entries(gViewSource).forEach(([key, component]) => {
@@ -67,14 +74,12 @@ Object.entries(gViewSource).forEach(([key, component]) => {
 
   if (!match) return;
 
-  const [, , name] = match;
+  const [, level, name] = match;
 
-  views[name] ||= {};
+  const widgetName = createWidgetName(level, name);
 
-  views[name] = component.default;
+  views[widgetName] ||= {};
+
+  views[widgetName] = component.default;
 });
-
-console.log(setters, views);
-
-// const TabPane =
 </script>

@@ -4,9 +4,9 @@
       <div class="param-list-item">
         <icon type="ant-design:holder-outlined" size="16" class="cursor-move" />
 
-        <a-input v-model:value="element.key" class="ml-10" placeholder="字段名称" />
+        <global-input v-model:value="element.key" class="ml-10" placeholder="字段名称" />
 
-        <a-input v-model:value="element.value" class="ml-10" placeholder="值" />
+        <global-input v-model:value="element.value" class="ml-10" placeholder="值" />
 
         <variable-type-select v-model:value="element.type" class="param-list-item-select" />
 
@@ -53,7 +53,6 @@ function handleDeleteParamItem(index: number) {
   align-items: center;
   padding: 8px;
   background: #fff;
-  cursor: pointer;
 }
 
 .param-list-item-delete {

@@ -3,6 +3,8 @@
     <template #suffixIcon>
       <icon type="ep:arrow-down" />
     </template>
+
+    <slot></slot>
   </a-select>
 </template>
 

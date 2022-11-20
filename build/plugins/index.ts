@@ -4,7 +4,9 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import windiCSS from 'vite-plugin-windicss';
 import VueSetupExtend from 'vite-plugin-vue-setup-extend';
 import VueTypeImports from 'vite-plugin-vue-type-imports';
-import autoImport from './auto-import';
+import DefineOptions from 'unplugin-vue-define-options/vite';
+import { configAutoImportPlugin } from './auto-import';
+import { autoRegistryComponents } from './component';
 
 export function createVitePlugins() {
   const vitePlugins: (PluginOption | PluginOption[])[] = [
@@ -16,12 +18,15 @@ export function createVitePlugins() {
     VueTypeImports()
   ];
 
-  // vite-plugin-windicss
-  vitePlugins.push(windiCSS());
-
   vitePlugins.push(VueSetupExtend());
 
-  vitePlugins.push(...autoImport());
+  vitePlugins.push(configAutoImportPlugin());
+
+  vitePlugins.push(windiCSS());
+
+  vitePlugins.push(DefineOptions());
+
+  vitePlugins.push(autoRegistryComponents());
 
   return vitePlugins;
 }

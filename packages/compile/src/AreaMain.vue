@@ -52,12 +52,10 @@
     </div>
 
     <div class="bc-main-area">
-      <div :class="['bc-simulator-canvas', `bc-simulator-${layoutType}`]">
-        <drop-container v-model:list="widgetTree" class="bc-compile" item-key="id">
+      <div :class="[canvasId, `bc-simulator-${layoutType}`]">
+        <drop-container v-model:list="widgetTree" class="bc-compile">
           <template #default="record">
-            <view-container :style="record.__style__">
-              <slot v-bind="record"></slot>
-            </view-container>
+            <slot v-bind="record"></slot>
           </template>
         </drop-container>
       </div>
@@ -77,7 +75,7 @@ import useContext from '@/hooks/useContext';
 import HistoryDrawer from '../components/HistoryDrawer.vue';
 import ShortcutsModal from '../components/ShortcutsModal.vue';
 import { DropContainer } from '../draggable';
-import ViewContainer from './ViewContainer.vue';
+import { canvasId } from '../constant';
 
 type LayoutType = 'pc' | 'h5';
 

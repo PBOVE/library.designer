@@ -1,5 +1,5 @@
 <template>
-  <a-input
+  <global-input
     v-model:value="inputValue"
     :placeholder="placeholder"
     :class="$style['wrap']"
@@ -22,14 +22,14 @@
         </template>
       </a-tooltip>
     </template>
-  </a-input>
+  </global-input>
 </template>
 
 <script lang="ts" setup>
 import { isEmpty } from 'lodash';
 
 interface Props {
-  value?: string;
+  value?: string | number;
 
   defaultValue?: string;
 

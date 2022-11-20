@@ -1,5 +1,5 @@
 <template>
-  <action-row label="内边距" :is-value="padding">
+  <action-row label="内边距" :is-value="padding" divider>
     <unit-input-number v-model:value="padding.value" :placeholder="placeholder" @change="hadnleValueChange" />
 
     <template #overlay>

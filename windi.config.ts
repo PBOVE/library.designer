@@ -29,12 +29,11 @@ export default defineConfig({
     },
     extend: {
       colors: {
-        light: {
-          0: '#ffffff',
-          50: '#fdfdfd',
-          350: '#f5f6fa',
-          650: '#f0f0f0',
-          750: '#e5e6e8'
+        fill: {
+          0: '#000000',
+          300: '#333333',
+          600: '#666666',
+          900: '#999999'
         }
       }
     }

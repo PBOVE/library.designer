@@ -6,8 +6,7 @@ type Props = Indexable;
 type Method = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
 // 变量类型
-type VariableType = 'string' | 'number' | 'boolean'
-
+type VariableType = 'string' | 'number' | 'boolean';
 
 //  参数
 export interface Params {
@@ -17,7 +16,7 @@ export interface Params {
 
   type: VariableType | undefined;
 
-  id: string
+  id: string;
 }
 
 // 组件数据
@@ -35,12 +34,11 @@ export interface Schema<T = Props> {
   props: T;
 
   // 不同状态样式
-  __style__: Recordable<CSSProperties>;
+  __style__: { ':root'?: CSSProperties };
 
   // 子数据
   children?: Schema[];
 }
-
 
 // 模版名称
 export interface Template<T = Props> {
@@ -140,6 +138,12 @@ export interface Contenxt {
 
     update: (key: string, value: Schema[keyof Schema]) => void;
   };
+  // 浮动元素
+  hoverSchema: {
+    set: (record: Record | null) => void;
+
+    get: () => Schema | null;
+  };
 }
 
 export interface Module {
@@ -149,7 +153,6 @@ export interface Module {
 
 export interface Setter {
   [key: string]: {
-    [key: string]: unknown
-  }
+    [key: string]: unknown;
+  };
 }
-

@@ -1,12 +1,12 @@
 <template>
   <div class="bc-db-header">
-    <a-input placeholder="请搜索" />
+    <global-input placeholder="请搜索" />
+  </div>
 
-    <div class="bc-db-buttons">
-      <div class="bc-db-button" @click="handleClickMenu('value')">变量</div>
+  <div class="bc-db-buttons">
+    <div class="bc-db-button" @click="handleClickMenu('value')">添加变量</div>
 
-      <div class="bc-db-button" @click="handleClickMenu('remote')">远程API</div>
-    </div>
+    <div class="bc-db-button" @click="handleClickMenu('remote')">添加远程API</div>
   </div>
 
   <draggable v-model="list" item-key="id" handle=".cursor-move">
@@ -84,21 +84,17 @@ function handleDeleteData(index: number) {
 }
 
 .bc-db-buttons {
-  display: flex;
-  flex-shrink: 0;
-  justify-content: flex-end;
-  height: 32px;
-  margin-left: 10px;
+  padding: 12px;
 }
 
 .bc-db-button {
+  display: inline-block;
   height: 32px;
   padding: 0 12px;
   border: 1px solid #d9d9d9;
   font-size: 12px;
+  line-height: 32px;
   cursor: pointer;
-
-  .flex-y-center();
 
   &:hover {
     color: var(--text-color);

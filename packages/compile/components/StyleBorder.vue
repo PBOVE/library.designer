@@ -1,5 +1,5 @@
 <template>
-  <action-row label="边框" label-class="!w-full">
+  <action-row label="边框" label-class="!w-full" divider>
     <template #overlay>
       <div class="flex items-center">
         <!-- 边框 -->

@@ -71,6 +71,8 @@ let isValueUpdateFromInner = false;
 
 const selectWidget = ref<Schema | null>(null);
 
+const hoverWidget = ref<Schema | null>(null);
+
 const { useProvide } = useContext<Contenxt>('PageDesigner');
 
 // 获取页面数据
@@ -99,7 +101,15 @@ const selectSchema = {
   }
 };
 
-useProvide({ templateTree: props.templateTree, onInstance, selectSchema });
+const hoverSchema = {
+  get: () => hoverWidget.value,
+
+  set: (record: Schema | null) => {
+    hoverWidget.value = record;
+  }
+};
+
+useProvide({ templateTree: props.templateTree, onInstance, selectSchema, hoverSchema });
 
 watch(
   () => props.page,
@@ -146,6 +156,7 @@ watch(
 
 .bc-main-container {
   flex: 1;
+  width: 0;
 }
 
 .bc-main-right {

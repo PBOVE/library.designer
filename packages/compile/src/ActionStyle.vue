@@ -1,16 +1,16 @@
 <template>
   <global-collapse v-model:activeKey="activeNames" ghost expand-icon-position="right">
     <a-collapse-panel key="setting" header="样式设置">
-      <action-row label="状态">
+      <action-row label="状态" divider>
         <global-select v-model:value="styleState" class="w-full" :options="stateOptions" />
       </action-row>
 
-      <action-row label="宽" :is-value="styleData.width">
-        <unit-input-number v-model:value="styleData.width" />
+      <action-row label="宽" :is-value="styleData.width" divider>
+        <unit-input-number v-model:value="styleData.width" :placeholder="canvas.width" />
       </action-row>
 
-      <action-row label="高" :is-value="styleData.height">
-        <unit-input-number v-model:value="styleData.height" />
+      <action-row label="高" :is-value="styleData.height" divider>
+        <unit-input-number v-model:value="styleData.height" :placeholder="canvas.height" />
       </action-row>
 
       <style-display v-model:value="styleData.display" />
@@ -27,11 +27,11 @@
 
       <style-shadow v-model:value="styleData.boxShadow" />
 
-      <action-row label="不透明度" :is-value="styleData.opacity">
+      <action-row label="不透明度" :is-value="styleData.opacity" divider>
         <unit-input-number v-model:value="styleData.opacity" :options="[{ label: '%', value: '%' }]" />
       </action-row>
 
-      <action-row label="鼠标手势" :is-value="styleData.cursor">
+      <action-row label="鼠标手势" :is-value="styleData.cursor" divider>
         <global-select v-model:value="styleData.cursor" :options="[{ value: 'default' }, { value: 'pointer' }]" />
       </action-row>
     </a-collapse-panel>
@@ -43,6 +43,7 @@ import type { Contenxt } from '#/editor';
 import type { CSSProperties } from 'vue';
 import { debounce } from 'lodash';
 import useContext from '@/hooks/useContext';
+import { addResizeListener, removeResizeListener } from '@/utils/dom/event';
 import StyleBackground from '~/compile/components/StyleBackground.vue';
 import StyleBorder from '~/compile/components/StyleBorder.vue';
 import StyleDisplay from '~/compile/components/StyleDisplay.vue';
@@ -50,6 +51,7 @@ import StyleFont from '~/compile/components/StyleFont.vue';
 import StyleMargin from '~/compile/components/StyleMargin.vue';
 import StylePadding from '~/compile/components/StylePadding.vue';
 import StyleShadow from '~/compile/components/StyleShadow.vue';
+import { canvasId } from '~/compile/constant';
 
 // 展开的标签
 const activeNames = ref('setting');
@@ -63,6 +65,8 @@ const { useInject } = useContext<Contenxt>('PageDesigner');
 const { selectSchema } = useInject();
 
 const styleSchema = computed(() => selectSchema.get()?.__style__[styleState.value] || {});
+
+const canvas = reactive({ width: '', height: '' });
 
 // 内部更新不触发
 let isValueUpdateFromInner = false;
@@ -117,4 +121,17 @@ const stateOptions = [
   { label: ':focus', value: ':root:focus' },
   { label: ':active', value: ':root:active' }
 ];
+
+// 获取画布数据
+function getCanvasData() {
+  const { width = 0, height = 0 } = document.querySelector(`.${canvasId}`)?.getBoundingClientRect() || {};
+
+  canvas.width = `${width}`;
+
+  canvas.height = `${height}`;
+}
+
+onMounted(() => addResizeListener(document.querySelector(`.${canvasId}`), getCanvasData));
+
+onUnmounted(() => removeResizeListener(document.querySelector(`.${canvasId}`), getCanvasData));
 </script>

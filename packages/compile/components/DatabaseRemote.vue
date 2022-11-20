@@ -11,11 +11,11 @@
     </template>
 
     <action-row label="名称" :divider="false">
-      <a-input v-model:value="dataItem.name" placeholder="请输入" />
+      <global-input v-model:value="dataItem.name" placeholder="请输入" />
     </action-row>
 
     <action-row label="描述" :divider="false">
-      <a-input v-model:value="dataItem.description" placeholder="请输入" />
+      <global-input v-model:value="dataItem.description" placeholder="请输入" />
     </action-row>
 
     <action-row label="发送方式" :divider="false">
@@ -28,20 +28,20 @@
 
     <b-collapse-divider title="请求参数" />
 
-    <param-drag-list v-model:value="dataItem.options!.params" />
+    <a-button type="primary" class="db-remote-params-button" @click="handleOpenParamsModel">添加一项</a-button>
 
     <b-collapse-divider title="返回结果字段映射" />
 
     <action-row label="状态码" :divider="false">
-      <a-input />
+      <global-input />
     </action-row>
 
     <action-row label="接口处理信息" :divider="false">
-      <a-input />
+      <global-input />
     </action-row>
 
     <action-row label="接口具体数据" :divider="false">
-      <a-input />
+      <global-input />
     </action-row>
 
     <b-collapse-divider title="请求返回时的数据" />
@@ -49,16 +49,17 @@
     <action-row label="状态码验证" :divider="false">
       <div class="flex">
         <variable-type-select class="mr-10" />
-        <a-input />
+
+        <global-input />
       </div>
     </action-row>
 
     <action-row label="请求成功提示" :divider="false">
-      <a-input />
+      <global-input />
     </action-row>
 
     <action-row label="请求错误提示" :divider="false">
-      <a-input />
+      <global-input />
     </action-row>
 
     {{ dataItem }}
@@ -70,7 +71,7 @@ import type { DataSource } from '#/editor';
 import type { Rules } from 'async-validator';
 import { useValidator } from '@/hooks/useValidator';
 import { useMessage } from '@/hooks/useMessage';
-import ParamDragList from './ParamDragList.vue';
+// import ParamDragList from './ParamDragList.vue';
 import VariableTypeSelect from './VariableTypeSelect.vue';
 
 interface Props {
@@ -84,6 +85,8 @@ const props = withDefaults(defineProps<Props>(), { value: false, dataSource: und
 const emit = defineEmits(['update:value', 'success']);
 
 const visible = computed({ set: (v) => emit('update:value', v), get: () => props.value });
+
+const modal = reactive({ params: false });
 
 const dataItem = ref<DeepPartial<DataSource>>({});
 
@@ -139,6 +142,10 @@ async function handleClickSaveData() {
 function handleClickCancelData() {
   visible.value = false;
 }
+
+function handleOpenParamsModel() {
+  modal.params = true;
+}
 </script>
 
 <style lang="less">
@@ -149,5 +156,10 @@ function handleClickCancelData() {
 
 .db-remote-cancel {
   margin-left: 10px;
+}
+
+.db-remote-params-button {
+  width: calc(100% - 40px);
+  margin: 7px 20px 4px;
 }
 </style>

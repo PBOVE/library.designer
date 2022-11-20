@@ -1,5 +1,5 @@
 <template>
-  <action-row label="阴影" label-class="!w-full" :is-value="value">
+  <action-row label="阴影" label-class="!w-full" :is-value="value" divider>
     <template #overlay>
       <action-row label="颜色" label-width="70px" :is-value="boxShadow.color">
         <b-color-picker v-model:value="boxShadow.color" @change="handleBoxShadowChange" />

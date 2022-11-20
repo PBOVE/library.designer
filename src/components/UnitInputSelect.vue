@@ -1,10 +1,10 @@
 <template>
   <a-dropdown v-model:visible="visible" trigger="click" :class="$style['wrap']" :get-popup-container="popupContainer">
-    <a-input readonly :placeholder="placeholder">
+    <global-input readonly :placeholder="placeholder">
       <template #suffix>
         <icon type="ep:arrow-down" size="12" color="rgba(0, 0, 0, 0.25)" />
       </template>
-    </a-input>
+    </global-input>
 
     <template #overlay>
       <div :class="$style['overlay']">

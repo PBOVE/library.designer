@@ -27,8 +27,10 @@
       </div>
 
       <!-- 提示 -->
-      <div :class="$style['reminder']">
-        <slot name="reminder"></slot>
+      <div v-if="reminder || $slots.reminder" :class="$style['reminder']">
+        <slot name="reminder">
+          {{ reminder }}
+        </slot>
       </div>
     </div>
 
@@ -52,13 +54,15 @@ interface Props {
   // label 标签的宽度
   labelWidth?: string;
   // 是否为 有效数据
-  isValue?: boolean | string | Array<unknown> | { [key: string]: unknown };
+  isValue?: boolean | string | number | Array<unknown> | { [key: string]: unknown };
   // 弹出层样式
   overlayClass?: string;
   // 分割线
   divider?: boolean;
   // 展示类型
   type?: 'horizontal' | 'vertical';
+  // 提示
+  reminder?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -67,8 +71,9 @@ const props = withDefaults(defineProps<Props>(), {
   overlayClass: '',
   labelWidth: '80px',
   isValue: () => false,
-  divider: true,
-  type: 'horizontal'
+  divider: false,
+  type: 'horizontal',
+  reminder: ''
 });
 
 const width = computed(() => (props.type === 'horizontal' ? props.labelWidth : ''));

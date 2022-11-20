@@ -1,5 +1,5 @@
 <template>
-  <action-row label="文字" label-class="!w-full" :is-value="styleFont">
+  <action-row label="文字" label-class="!w-full" :is-value="styleFont" divider>
     <template #overlay>
       <div class="grid grid-cols-[1fr,121px] gap-x-10">
         <action-row label="粗细" label-width="30px" :is-value="styleData.fontWeight">
@@ -39,7 +39,7 @@
       </div>
 
       <action-row label="对齐" label-width="30px" class="text-center" :is-value="styleData.textAlign">
-        <a-radio-group v-model:value="styleData.textAlign" class="flex">
+        <a-radio-group v-model:value="styleData.textAlign" class="!flex w-full">
           <a-radio-button value="left" class="flex-1"> 居左 </a-radio-button>
           <a-radio-button value="center" class="flex-1"> 居中 </a-radio-button>
           <a-radio-button value="right" class="flex-1"> 居右 </a-radio-button>
@@ -47,7 +47,7 @@
       </action-row>
 
       <action-row label="修饰" label-width="30px" class="text-center" :is-value="styleData.textDecoration">
-        <a-radio-group v-model:value="styleData.textDecoration" class="flex">
+        <a-radio-group v-model:value="styleData.textDecoration" class="!flex w-full">
           <a-radio-button value="normal" class="flex-1"> 默认 </a-radio-button>
           <a-radio-button value="underline" class="flex-1"> 下划线 </a-radio-button>
           <a-radio-button value="line-through" class="flex-1"> 删除线 </a-radio-button>

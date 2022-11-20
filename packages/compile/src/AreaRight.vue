@@ -3,7 +3,7 @@
     <action-tab :options="options">
       <template #default="{ record }">
         <slot v-if="record?.slot" v-bind="{ view: record.name, schema }"></slot>
-        <!-- 样式 -->
+        <!-- 默认自定义模块 -->
         <component :is="record.name" />
       </template>
     </action-tab>

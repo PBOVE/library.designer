@@ -51,12 +51,12 @@ module.exports = {
     // 引入文件结尾带上 扩展名
     'import/extensions': [
       'error',
-      'always',
+      'ignorePackages',
       {
         js: 'never',
+        jsx: 'never',
         ts: 'never',
-        tsx: 'never',
-        jsx: 'never'
+        tsx: 'never'
       }
     ],
     'vue/multi-word-component-names': 'off',

@@ -135,13 +135,13 @@ const SVPANEL_SIZE = { w: 280, h: 180 };
 const THUMB_SIZE = { w: 4, h: 4 };
 
 function updateInnerColor() {
-  const color = unref(currentColor);
+  inputColor.value = unref(currentColor);
 
-  inputColor.value = color;
+  const color = tinycolor(unref(inputColor));
 
-  inputColorRgb.value = tinycolor(color).toRgb();
+  inputColorRgb.value = color.toRgb();
 
-  inputColorHex.value = tinycolor(color).toHexString().replace('#', '').toUpperCase();
+  inputColorHex.value = (color.getAlpha() < 1 ? color.toHex8() : color.toHex()).toUpperCase();
 }
 
 // 颜色更新
@@ -248,7 +248,14 @@ function updatePosition() {
 
 // 输入失去的值
 function handleInputHexBlur() {
-  const color = tinycolor(`#${inputColorHex.value}`);
+  let value = unref(inputColorHex);
+
+  if (/^#?([a-fA-F\d]{6}|[a-fA-F\d]{3})$/.test(value)) {
+    // HEX 格式
+    value = `#${value.replace('#', '')}`;
+  }
+
+  const color = tinycolor(value);
 
   updateColor(color.toHex8());
 

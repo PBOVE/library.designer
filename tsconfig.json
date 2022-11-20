@@ -13,7 +13,7 @@
     "build/**/*.ts",
     "build/**/*.d.ts",
     "vite.config.ts"
-, "packages/compile/src/TabPaneTree.jsx"  ],
+  ],
   "exclude": ["/dist/**", "node_modules"],
   "compilerOptions": {
     "target": "esnext",
